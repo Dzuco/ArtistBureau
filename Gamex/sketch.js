@@ -7,12 +7,12 @@ function setup() {
     
     bullet[0] = new ammo();
 
-    for(var i=0;i<3;i++){
+    for(var i=0;i<5;i++){
         alien[i] = new foe();
-        alien[i].y = 50;
-        alien[i].x = bOffset;
+        alien[i].y = random(10,100); 
+        alien[i].x = random(20,580); 
         alien[i].show = true;
-        bOffset +=50; 
+  
 
     }
    
@@ -23,13 +23,21 @@ function draw() {
     background(200);
     friend.display();
  
-
-    for(var i=0; i<bullet.length;i++){ 
+    //dos ciclos para dibujar los personajes
+    for(var i=0; i<bullet.length;i++){
         bullet[i].display();
+    }
+    for(var i=0; i<alien.length;i++){
+        alien[i].display();
+    }
+
+    //ciclos anidados para comparar atributos de los personajes - colision
+    for(var i=0; i<bullet.length;i++){ 
+        //bullet[i].display(); //se movio esta linea a un ciclo independiente ya que generaba una aceleracion en alien
         for(var j=0; j<alien.length;j++){
-            alien[j].display();    
+            //alien[j].display();    
             if(bullet[i].x >= alien[j].x-20 && bullet[i].x <= alien[j].x+20 && bullet[i].y <= alien[j].y+10){
-                //alien[j].show = false;
+                //alien[j].show = false; //se movio esta linea a un ciclo independiente ya que generaba una aceleracion en alien
                 alien.splice(j,1);
                 bullet.splice(i,1);
                 gclip--;
@@ -41,6 +49,9 @@ function draw() {
             gclip--;
         }
     }
+
+    
+
     // for(k of alien){ 
     //     k.display();
     // }
@@ -86,11 +97,13 @@ function foe(){
     this.x = 0;
     this.y = 0;
     this.show = false;
+    this.path = 0.5;
     this.display = function(){
         if(this.show == true){
             push();
             fill('green');
             rect(this.x,this.y,40,20);
+            this.y += this.path;
             pop();
         }
     }
