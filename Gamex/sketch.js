@@ -11,12 +11,11 @@ function setup() {
         alien[i] = new foe();
         alien[i].y = random(10,100); 
         alien[i].x = random(20,580); 
+        alien[i].w=random(5,15);
         alien[i].show = true;
   
 
     }
-   
-   
 }
 
 function draw() {
@@ -36,7 +35,7 @@ function draw() {
         //bullet[i].display(); //se movio esta linea a un ciclo independiente ya que generaba una aceleracion en alien
         for(var j=0; j<alien.length;j++){
             //alien[j].display();    
-            if(bullet[i].x >= alien[j].x-20 && bullet[i].x <= alien[j].x+20 && bullet[i].y <= alien[j].y+10){
+            if(bullet[i].x >= alien[j].x-(alien[j].w/2) && bullet[i].x <= alien[j].x+(alien[j].w/2) && bullet[i].y <= alien[j].y+10){
                 //alien[j].show = false; //se movio esta linea a un ciclo independiente ya que generaba una aceleracion en alien
                 alien.splice(j,1);
                 bullet.splice(i,1);
@@ -61,8 +60,8 @@ function draw() {
 
 function mouseClicked(){
     friend.show = true;
-    friend.x = mouseX;
-    friend.y = mouseY;
+    friend.nx = mouseX;
+    friend.ny = mouseY;
 }
 
 function keyPressed(){
@@ -82,11 +81,25 @@ function keyPressed(){
 function player(){
     this.x = 0;
     this.y = 0;
+    this.nx = 0;
+    this.ny = 0;
     this.show = false;
     this.display = function(){
         if(this.show == true){
             push();
             fill('red');
+            if(this.x < this.nx){
+                this.x += 1;
+              }
+              if(this.x > this.nx){
+                this.x -= 1;
+              }
+              if(this.y < this.ny){
+                this.y += 1;
+              }
+              if(this.y > this.ny){
+                this.y -= 1;
+              }
             rect(this.x,this.y,40,20);
             pop();
         }
@@ -96,13 +109,14 @@ function player(){
 function foe(){
     this.x = 0;
     this.y = 0;
+    this.w = 0;
     this.show = false;
     this.path = 0.5;
     this.display = function(){
         if(this.show == true){
             push();
             fill('green');
-            rect(this.x,this.y,40,20);
+            rect(this.x,this.y,this.w,20);
             this.y += this.path;
             pop();
         }
@@ -118,7 +132,7 @@ function ammo(){
     this.path = 0;
     this.display = function(){
         if(this.show == true){
-            push();
+            push(3);
             fill('blue');
             line(this.x,this.y,this.x,this.y-10);
             this.y += this.path;
